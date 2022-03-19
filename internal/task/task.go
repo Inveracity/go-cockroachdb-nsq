@@ -1,8 +1,8 @@
-package main
+package task
 
 import (
 	"github.com/google/uuid"
-	os "github.com/inveracity/go-cockroachdb-nsq/internal"
+	"github.com/inveracity/go-cockroachdb-nsq/internal/os"
 )
 
 type Task struct {

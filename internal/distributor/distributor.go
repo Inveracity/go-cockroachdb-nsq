@@ -1,4 +1,4 @@
-package main
+package distributor
 
 import (
 	"encoding/json"
@@ -7,10 +7,11 @@ import (
 	"github.com/google/uuid"
 	nsq "github.com/nsqio/go-nsq"
 
-	os "github.com/inveracity/go-cockroachdb-nsq/internal"
+	"github.com/inveracity/go-cockroachdb-nsq/internal/os"
+	"github.com/inveracity/go-cockroachdb-nsq/internal/task"
 )
 
-func distributor() {
+func Distributor() {
 	// Instantiate a producer.
 	config := nsq.NewConfig()
 	producer, err := nsq.NewProducer("127.0.0.1:4150", config)
@@ -18,7 +19,7 @@ func distributor() {
 		log.Fatal(err)
 	}
 
-	msg := Task{
+	msg := task.Task{
 		ID:      uuid.Must(uuid.NewRandom()),
 		Version: "2022.1",
 		Os:      os.Linux,

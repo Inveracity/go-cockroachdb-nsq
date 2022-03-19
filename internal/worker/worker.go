@@ -1,4 +1,4 @@
-package main
+package worker
 
 import (
 	"encoding/json"
@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/inveracity/go-cockroachdb-nsq/internal/task"
 	"github.com/nsqio/go-nsq"
 )
 
@@ -22,7 +23,7 @@ func (h *myMessageHandler) HandleMessage(m *nsq.Message) error {
 
 	// do whatever actual message processing is desired
 	//Process the Message
-	var task Task
+	var task task.Task
 	if err := json.Unmarshal(m.Body, &task); err != nil {
 		log.Println("Error when Unmarshaling the message body, Err : ", err)
 		// Returning a non-nil error will automatically send a REQ command to NSQ to re-queue the message.
@@ -34,7 +35,7 @@ func (h *myMessageHandler) HandleMessage(m *nsq.Message) error {
 	return nil
 }
 
-func worker() {
+func Worker() {
 	// Instantiate a consumer that will subscribe to the provided channel.
 	config := nsq.NewConfig()
 	consumer, err := nsq.NewConsumer("topic", "channel", config)
