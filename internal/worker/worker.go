@@ -29,6 +29,7 @@ func (h *myMessageHandler) HandleMessage(m *nsq.Message) error {
 		// Returning a non-nil error will automatically send a REQ command to NSQ to re-queue the message.
 		return err
 	}
+
 	log.Printf("Received Task\ntask id: %s\nVersion: %s\nOS: %s", task.ID, task.Version, task.Os)
 
 	// Returning a non-nil error will automatically send a REQ command to NSQ to re-queue the message.
