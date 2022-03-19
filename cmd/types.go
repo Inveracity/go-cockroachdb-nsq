@@ -1,10 +1,12 @@
 package main
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	os "github.com/inveracity/go-cockroachdb-nsq/internal"
+)
 
-type task struct {
+type Task struct {
 	ID      uuid.UUID
-	JobID   uuid.UUID
 	Version string
-	Os      string
+	Os      os.OperatingSystem
 }

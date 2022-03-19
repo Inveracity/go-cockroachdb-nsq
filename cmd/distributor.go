@@ -1,9 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 
+	"github.com/google/uuid"
 	nsq "github.com/nsqio/go-nsq"
+
+	os "github.com/inveracity/go-cockroachdb-nsq/internal"
 )
 
 func distributor() {
@@ -14,12 +18,22 @@ func distributor() {
 		log.Fatal(err)
 	}
 
-	messageBody := []byte("hello")
+	msg := Task{
+		ID:      uuid.Must(uuid.NewRandom()),
+		Version: "2022.1",
+		Os:      os.Linux,
+	}
+	//Convert message as []byte
+	payload, err := json.Marshal(msg)
+	if err != nil {
+		log.Println(err)
+	}
+
 	topicName := "topic"
 
 	// Synchronously publish a single message to the specified topic.
 	// Messages can also be sent asynchronously and/or in batches.
-	err = producer.Publish(topicName, messageBody)
+	err = producer.Publish(topicName, payload)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"os"
 	"os/signal"
@@ -20,7 +21,14 @@ func (h *myMessageHandler) HandleMessage(m *nsq.Message) error {
 	}
 
 	// do whatever actual message processing is desired
-	log.Printf("%+v", string(m.Body))
+	//Process the Message
+	var task Task
+	if err := json.Unmarshal(m.Body, &task); err != nil {
+		log.Println("Error when Unmarshaling the message body, Err : ", err)
+		// Returning a non-nil error will automatically send a REQ command to NSQ to re-queue the message.
+		return err
+	}
+	log.Printf("Received Task\ntask id: %s\nVersion: %s\nOS: %s", task.ID, task.Version, task.Os)
 
 	// Returning a non-nil error will automatically send a REQ command to NSQ to re-queue the message.
 	return nil
