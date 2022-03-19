@@ -29,7 +29,7 @@ services:
     command: [
       "/nsqd",
       "--broadcast-address",
-      "host.docker.internal",
+      "localhost",
       "--lookupd-tcp-address=nsqlookupd:4160"
     ]
 
