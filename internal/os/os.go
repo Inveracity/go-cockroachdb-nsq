@@ -1,8 +1,7 @@
-package os
-
-type OperatingSystem string
+package operatingsystem
 
 const (
-	Windows OperatingSystem = "Windows"
-	Linux   OperatingSystem = "Linux"
+	Windows string = "windows"
+	Linux   string = "linux"
+	Macos   string = "macos"
 )

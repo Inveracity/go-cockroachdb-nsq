@@ -1,17 +1,16 @@
 package distributor
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 
-	"github.com/google/uuid"
+	crud "github.com/inveracity/go-cockroachdb-nsq/internal/database"
 	nsq "github.com/nsqio/go-nsq"
-
-	"github.com/inveracity/go-cockroachdb-nsq/internal/os"
-	"github.com/inveracity/go-cockroachdb-nsq/internal/task"
 )
 
-func Distributor() {
+func Distributor(ctx context.Context) {
+
 	// Instantiate a producer.
 	config := nsq.NewConfig()
 	producer, err := nsq.NewProducer("127.0.0.1:4150", config)
@@ -19,13 +18,10 @@ func Distributor() {
 		log.Fatal(err)
 	}
 
-	msg := task.Task{
-		ID:      uuid.Must(uuid.NewRandom()),
-		Version: "2022.1",
-		Os:      os.Linux,
-	}
-	//Convert message as []byte
-	payload, err := json.Marshal(msg)
+	db, _ := crud.Database()
+	conn := crud.NewDB(db)
+	res, _ := conn.Read(ctx)
+	payload, err := json.Marshal(res)
 	if err != nil {
 		log.Println(err)
 	}
